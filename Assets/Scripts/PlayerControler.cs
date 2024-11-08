@@ -14,61 +14,55 @@ public class PlayerControler : MonoBehaviour
     private Rigidbody playerRB;
     private bool isOnGround, hasDoubleJump = true;
     public bool gameOver { get; private set; }
-    private float jumpStatus;
-    private Vector3 initialMomentum;
-    private Vector3 doubleJumpForce;
+    private int jumpStatus;
+    private Vector3 initialMomentum, doubleJumpForce, crouchScale;
+    private BoxCollider playerCol;
 
     // Start is called before the first frame update
     void Start()
     {
         playerRB = gameObject.GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifier;
+        initialMomentum = new Vector3(0, jumpForce, 0);
+        playerCol = GetComponent<BoxCollider>();
+        crouchScale = new Vector3(1, 0.5f, 1);
     }
-
-    private void Update()
+    
+    void OnJump(InputValue input)
     {
-        //playerRB.velocity
-
-    }
-
-    void OnJump(InputValue input) 
-    {
-        if (jumpStatus == 1.0f)
+        if (jumpStatus == 1)
         {
+            Vector3 currentMomentum = playerRB.mass * playerRB.velocity;
+            doubleJumpForce = (initialMomentum -= currentMomentum);
             playerRB.AddForce(doubleJumpForce, ForceMode.Impulse);
             jumpStatus++;
-            Vector3 currentMomentum = playerRB.mass * playerRB.velocity;
+            initialMomentum = new Vector3(0, jumpForce, 0);
+            Debug.Log("DoubleJumpForce: " + doubleJumpForce);
             Debug.Log("currentMomentum MV: " + currentMomentum);
-            doubleJumpForce = initialMomentum -= currentMomentum;
+            Debug.Log("initialMomentum = " + initialMomentum);
         }
 
-        if (jumpStatus == 0.0f)
+        if (jumpStatus == 0)
         {
             playerRB.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             jumpStatus++;
-            initialMomentum = playerRB.mass * playerRB.velocity;
             Debug.Log("initialMomentum MV: " + initialMomentum);
         }
-
-        /*if (isOnGround)
-        {
-            playerRB.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isOnGround = false;
-        }
-        if (!isOnGround && hasDoubleJump)
-        {
-            playerRB.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            hasDoubleJump = false;
-        }*/
     }
 
+    void OnCrouch(InputValue input)
+    {
+        
+        playerCol.size = crouchScale;
+    }
+    
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             isOnGround = true;
             hasDoubleJump = true;
-            jumpStatus = 0.0f;
+            jumpStatus = 0;
         }
     }
 
