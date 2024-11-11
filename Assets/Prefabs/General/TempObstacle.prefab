@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 1264718591173579247}
   - component: {fileID: 8748486207053258123}
   - component: {fileID: 7913741658995741408}
+  - component: {fileID: 6291315334678740604}
   m_Layer: 0
   m_Name: TempObstacle
   m_TagString: Obstacle
@@ -178,4 +179,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d15befdaad65e45b9ef9f4ed6003f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
+--- !u!114 &6291315334678740604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4948012377826547152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc194f1059e507b45a97418e9f096a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

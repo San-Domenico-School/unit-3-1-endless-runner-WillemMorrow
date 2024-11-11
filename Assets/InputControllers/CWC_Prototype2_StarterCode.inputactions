@@ -45,7 +45,7 @@
                     "name": "Crouch",
                     "type": "Value",
                     "id": "cb48913d-6beb-496a-9632-ac91803bb936",
-                    "expectedControlType": "",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true

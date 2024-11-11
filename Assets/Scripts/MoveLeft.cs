@@ -17,9 +17,22 @@ public class MoveLeft : MonoBehaviour
     private float leftBound = -15;
     private PlayerController playerControllerScript;
 
+    private void Start()
+    {
+        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.left * Time.deltaTime * speed);
+        if (playerControllerScript.gameOver == false)
+        {
+            MoveToLeft();
+        }
     }
+
+    private void MoveToLeft()
+    {
+        transform.Translate(Vector3.left * Time.deltaTime * speed);
+    }    
 }

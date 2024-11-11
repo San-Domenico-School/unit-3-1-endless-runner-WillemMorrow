@@ -7,8 +7,7 @@ TagManager:
   - Ground
   - Obstacle
   - Scoreable
-  - Collectable
-  - PowerUp
+  - ObstacleReset
   layers:
   - Default
   - TransparentFX

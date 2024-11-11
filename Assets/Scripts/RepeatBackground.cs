@@ -28,7 +28,6 @@ public class RepeatBackground : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(repeatWidth);
         if (transform.position.x < (startPos.x - repeatWidth))
         {
             transform.position = startPos;
