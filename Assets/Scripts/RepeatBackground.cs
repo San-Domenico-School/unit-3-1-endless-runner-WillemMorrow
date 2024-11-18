@@ -7,7 +7,7 @@ using UnityEngine;
  * Component of background
  * 
  * Pacifica Morrow
- * 10.08.2024
+ * 11.08.2024
  * Version1
  * *************/
 

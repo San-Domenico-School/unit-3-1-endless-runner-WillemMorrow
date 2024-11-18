@@ -9,36 +9,40 @@ using UnityEngine;
  * 
  * Pacifica Morrow
  * Version1
- * 11.08.2024
+ * 11.11.2024
  * *****************************************/
-
-//MAKE CALLING THE NEXT PREFAB AND DISABLING THE OBJECT DIFFERENT METHODS(?)
-//potential problem: it can enable the same prefab -- ask Mr.G if one can exclude a value from Random.Range or an equivalent 
 
 public class ObstacleManager : MonoBehaviour
 {
     private Vector3 startPosition;
-    private SpawnManager spawnManagerScript;
+    //private SpawnManager spawnManagerScript;
 
-    // Start is called before the first frame update
+    // Start is called before the first frame update; sets the StartPosition to the object's starting position
     void Start()
     {
         startPosition = transform.position;
-        spawnManagerScript = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        //spawnManagerScript = SpawnManager.Instance;
+        //spawnManagerScript = GameObject.Find("EnableManager").GetComponent<SpawnManager>();
     }
 
+    // either enables the next projectile (via SpawnManager class) or disables the object, depending on which trigger it colides with.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("ObstacleReset"))
+        if (other.gameObject.name == "ObstacleInitiator")
+        {
+            SpawnManager.Instance.EnablePrefabDelay();
+        }
+
+        if (other.gameObject.name == "ObstacleReset")
         {
             gameObject.SetActive(false);
         }
     }
 
+    //upon the object's disabling, it resets its position.
     private void OnDisable()
     {
         transform.position = startPosition;
-        spawnManagerScript.StartCoroutine("ObstacleDelayer");
         /*
         if (SpawnManager.Instance != null)
         {
