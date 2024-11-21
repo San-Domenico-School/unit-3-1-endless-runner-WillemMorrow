@@ -14,17 +14,11 @@ using UnityEngine;
 public class MoveLeft : MonoBehaviour
 {
     private float speed = 10;
-    private PlayerController playerControllerScript;
-
-    private void Start()
-    {
-        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
-    }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerControllerScript.gameOver == false)
+        if (GameManager.gameOver == false)
         {
             MoveToLeft();
         }

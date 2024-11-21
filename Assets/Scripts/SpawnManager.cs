@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 /***************************************************
  * Custom spawn manager
+ * instead of instantiating the new obstacles, it enables random,
+ * prefabricated obstacles.
  * 
  * Pacifica Morrow
  * 11.11.2024

@@ -16,20 +16,20 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float jumpForce;                                           // The force of the player's jump
-    [SerializeField] private float gravityModifier;                                     // How much gravity there is, compared to 9.8 N/kg
-    [SerializeField] private ParticleSystem dirtParticle, explosionParticle;            // Particles related to the player
-    [SerializeField] private AudioClip jumpSound, crashSound;                           // Audio clips relating to the player
-    private Animator playerAnimator;                                                    // Player's animator
-    private AudioSource playerAudio;                                                    // Player's audiosource
-    private Rigidbody playerRB;                                                         // Player's rigidbody
-    //private bool isOnGround, hasDoubleJump = true;                                    // (unused) booleans relating to whether the player is on the ground, and if they have Double Jump
-    public bool gameOver { get; private set; }                                          // Boolean determining if the game is over.
-    private int jumpStatus;                                                             // An integer used to determine what jump state the player is in; on ground == 0, in the air with double jump available == 1, in the air w/o double jump == >1
-    private Vector3 initialMomentum, doubleJumpForce, crouchScale, initialScale;        // The player's initial momentum out of a jump, the force that should be applied on double jump, how small (relative to previous size) the player's hitbox becomes.
-    private BoxCollider playerCol;                                                      // A reference to the player's BoxCollider
-    private bool isCrouched;                                                            // Whether the player is crouched or not.
-    private float crouchInput;                                                          // float value from the Input, either 0 or 1, which determines whether the player is crouched
+    [SerializeField] private float jumpForce;                                               // The force of the player's jump
+    [SerializeField] private float gravityModifier;                                         // How much gravity there is, compared to 9.8 N/kg
+    [SerializeField] private ParticleSystem dirtParticle, explosionParticle, smokeParticle; // Particles related to the player
+    [SerializeField] private AudioClip jumpSound, crashSound;                               // Audio clips relating to the player
+    private Animator playerAnimator;                                                        // Player's animator
+    private AudioSource playerAudio;                                                        // Player's audiosource
+    private Rigidbody playerRB;                                                             // Player's rigidbody
+    //private bool isOnGround, hasDoubleJump = true;                                        // (unused) booleans relating to whether the player is on the ground, and if they have Double Jump
+    //public bool gameOver { get; private set; }                                              // Boolean determining if the game is over.
+    private int jumpStatus;                                                                 // An integer used to determine what jump state the player is in; on ground == 0, in the air with double jump available == 1, in the air w/o double jump == >1
+    private Vector3 initialMomentum, doubleJumpForce, crouchScale, initialScale;            // The player's initial momentum out of a jump, the force that should be applied on double jump, how small (relative to previous size) the player's hitbox becomes.
+    private BoxCollider playerCol;                                                          // A reference to the player's BoxCollider
+    private bool isCrouched;                                                                // Whether the player is crouched or not.
+    private float crouchInput;                                                              // float value from the Input, either 0 or 1, which determines whether the player is crouched
 
 
     // Initializes many fields before the first frame.
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Initial jump; activates if player isn't crouched and if jumpStatis is 0.
-        if ((jumpStatus == 0) && (isCrouched == false) && (gameOver == false))
+        if ((jumpStatus == 0) && (isCrouched == false) && (GameManager.gameOver == false))
         {
             playerRB.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             playerAnimator.SetTrigger("Jump_trig");
@@ -86,16 +86,24 @@ public class PlayerController : MonoBehaviour
     // Sets the player to a crouched state when the crouch button is pressed.
     void ChangeCrouch()
     {
-        if (crouchInput == 1)
-        {
-            playerCol.size = crouchScale;
-            isCrouched = true;
-        }
+        float playerColY = playerCol.size.y;
+        float initialScaleY = initialScale.y;
         
-        else
+        if (GameManager.gameOver == false)
         {
-            playerCol.size = initialScale;
-            isCrouched = false;
+            if (crouchInput == 1)
+            {
+                playerCol.size = crouchScale;
+                isCrouched = true;
+            }
+
+            else
+            {
+                //playerColY = Mathf.Lerp(playerCol.size.y, initialScale.y, 3);
+                //playerCol.size = new Vector3(playerCol.size.x, playerColY, playerCol.size.z);
+                playerCol.size = initialScale;
+                isCrouched = false;
+            }
         }
     }
     
@@ -108,21 +116,24 @@ public class PlayerController : MonoBehaviour
             //isOnGround = true;
             //hasDoubleJump = true;
             jumpStatus = 0;
-            if (gameOver == false)
+            if (GameManager.gameOver == false)
             {
                 dirtParticle.Play();
             }
         }
 
         // If it is an obstacle object, it will end the game.
+        // Does all the end-game functions
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            gameOver = true;
+            GameManager.gameOver = true;
             playerAnimator.SetBool("GameOver_bool", true);
             //EnableRagdoll();
             dirtParticle.Stop();
             explosionParticle.Play();
             playerAudio.PlayOneShot(crashSound, 1.0f);
+            smokeParticle.Stop();
+            playerCol.size = initialScale;
         }
     }
 
@@ -138,7 +149,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Scoreable"))
         {
-            ScoreKeeper.Instance.AddToScore();
+            GameManager.Instance.AddToScore();
             other.gameObject.SetActive(false);
         }
     }
