@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour
         // Does all the end-game functions
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            GameManager.gameOver = true;
+            GameManager.Instance.EndGame();
             playerAnimator.SetBool("GameOver_bool", true);
             //EnableRagdoll();
             dirtParticle.Stop();
