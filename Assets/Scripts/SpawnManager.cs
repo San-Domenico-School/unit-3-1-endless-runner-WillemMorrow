@@ -10,7 +10,7 @@ using UnityEngine.AI;
  * prefabricated obstacles.
  * 
  * Pacifica Morrow
- * 11.11.2024
+ * 11.24.2024
  * version 1
  * ************************************************/
 
@@ -40,28 +40,30 @@ public class SpawnManager : MonoBehaviour
     
     //Enables a random prefabricated obstacle course from those available in the scene.
     public void EnablePrefab()
-    {   
-        if (obstacles.Length > 0 && (obstacles[0] != null)) 
+    {
+        if ((GameManager.Instance.Time > 3) || (GameManager.Instance.oneMinuteGame == false))
         {
-            int prefabRestrict = prefabIndex;
-            while (prefabIndex == prefabRestrict)
+            if ((obstacles.Length > 0) && (obstacles[0] != null))
             {
-                prefabIndex = Random.Range(0, obstacles.Length);
+                int prefabRestrict = prefabIndex;
+                while (prefabIndex == prefabRestrict)
+                {
+                    prefabIndex = Random.Range(0, obstacles.Length);
+                }
+
+                GameObject prefab = obstacles[prefabIndex];
+                prefab.SetActive(true);
+                foreach (Transform child in prefab.transform)
+                {
+                    child.gameObject.SetActive(true);
+                }
             }
 
-            GameObject prefab = obstacles[prefabIndex];
-            prefab.SetActive(true);
-            foreach (Transform child in prefab.transform)
+            else
             {
-                child.gameObject.SetActive(true);
+                Debug.LogWarning("there are no Obsticles to enable!");
             }
         }
-
-        else
-        {
-            Debug.LogWarning("there are no Obsticles to enable!");
-        }
-        //Debug.Log("SpawnManager.EnablePrefab() activated");
     }
 
     // Enables the next prefab after a delay of 1 frame.

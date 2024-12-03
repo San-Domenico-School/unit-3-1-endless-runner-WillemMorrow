@@ -33,7 +33,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Cedar.Death
+      name: Cedar.Death1
       takeName: Armature|ArmatureAction
       internalID: 4781951162920444690
       firstFrame: 76
@@ -62,7 +62,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Cedar.Dead
+      name: Cedar.Dead1
       takeName: Armature|ArmatureAction
       internalID: -1246731831762816583
       firstFrame: 92

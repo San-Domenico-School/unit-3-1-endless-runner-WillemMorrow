@@ -7,20 +7,31 @@ using UnityEngine;
  * until game end.
  * 
  * Pacifica Morrow
- * 10.08.2024
+ * 10.24.2024
  * Version1
  * ***********************/
 
 public class MoveLeft : MonoBehaviour
 {
-    private float speed = 10;
+    public static float speed = 10;
+    private static float slowDownRate = 6;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (GameManager.gameOver == false)
         {
             MoveToLeft();
+        }
+
+        if ((GameManager.Instance.gameEnd == true) && (speed > 0))
+        {
+            speed -= (Time.deltaTime * slowDownRate);
+            
+            if (speed < 0)
+            {
+                speed = 0;
+            }
         }
     }
 

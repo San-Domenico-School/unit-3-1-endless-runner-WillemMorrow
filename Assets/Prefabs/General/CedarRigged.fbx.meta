@@ -38,7 +38,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Cedar.Slide
+      name: Cedar.Slide1
       takeName: Armature|ArmatureAction
       internalID: 4781951162920444690
       firstFrame: 10
@@ -67,7 +67,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Cedar.Run
+      name: Cedar.Run1
       takeName: Armature|ArmatureAction
       internalID: -1246731831762816583
       firstFrame: 20
@@ -96,7 +96,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Cedar.Jump
+      name: Cedar.Jump1
       takeName: Armature|ArmatureAction
       internalID: 4594303134292970328
       firstFrame: 38
@@ -125,7 +125,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Cedar.Airborne
+      name: Cedar.Airborne1
       takeName: Armature|ArmatureAction
       internalID: 3696890337287820257
       firstFrame: 43
@@ -154,7 +154,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Cedar.LandingTransition
+      name: Cedar.LandingTransition1
       takeName: Armature|ArmatureAction
       internalID: 5401091116426756364
       firstFrame: 68
@@ -245,11 +245,12 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 2742ab465ca5dfb4180fa5a74c414e1d,
+    type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0

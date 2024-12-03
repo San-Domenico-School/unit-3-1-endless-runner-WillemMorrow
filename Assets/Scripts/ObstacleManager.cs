@@ -9,20 +9,17 @@ using UnityEngine;
  * 
  * Pacifica Morrow
  * Version1
- * 11.11.2024
+ * 11.16.2024
  * *****************************************/
 
 public class ObstacleManager : MonoBehaviour
 {
     private Vector3 startPosition;
-    //private SpawnManager spawnManagerScript;
 
     // Start is called before the first frame update; sets the StartPosition to the object's starting position
     void Start()
     {
         startPosition = transform.position;
-        //spawnManagerScript = SpawnManager.Instance;
-        //spawnManagerScript = GameObject.Find("EnableManager").GetComponent<SpawnManager>();
     }
 
     // either enables the next projectile (via SpawnManager class) or disables the object, depending on which trigger it colides with.
@@ -43,15 +40,5 @@ public class ObstacleManager : MonoBehaviour
     private void OnDisable()
     {
         transform.position = startPosition;
-        /*
-        if (SpawnManager.Instance != null)
-        {
-            SpawnManager.Instance.EnablePrefab();
-        }
-        else
-        {
-            Debug.LogWarning("SpawnManager.Instance is null!");
-        }
-        */
     }
 }
