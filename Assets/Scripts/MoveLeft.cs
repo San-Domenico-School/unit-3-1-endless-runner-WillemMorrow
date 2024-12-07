@@ -17,7 +17,7 @@ public class MoveLeft : MonoBehaviour
     private static float slowDownRate = 6;
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (GameManager.gameOver == false)
         {

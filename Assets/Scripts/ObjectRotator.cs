@@ -16,12 +16,30 @@ public class ObjectRotator : MonoBehaviour
     [SerializeField] private float rotationSpeedX;
     [SerializeField] private float rotationSpeedY;
     [SerializeField] private float rotationSpeedZ;
+    [SerializeField] private float maxRotationX;
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        transform.Rotate(Time.deltaTime * Vector3.up * rotationSpeedY);
-        transform.Rotate(Time.deltaTime * Vector3.left * rotationSpeedX);
-        transform.Rotate(Time.deltaTime * Vector3.forward * rotationSpeedZ);
+        float rotationXDegrees = Mathf.Rad2Deg * transform.rotation.x;
+        if (maxRotationX >= 0)
+        {
+            if ((rotationXDegrees < maxRotationX) || (maxRotationX == 0))
+            {
+                transform.Rotate(Time.deltaTime * Vector3.up * rotationSpeedY);
+                transform.Rotate(Time.deltaTime * Vector3.left * rotationSpeedX);
+                transform.Rotate(Time.deltaTime * Vector3.forward * rotationSpeedZ);
+            }
+        }
+
+        else
+        {
+            if (rotationXDegrees > maxRotationX)
+            {
+                transform.Rotate(Time.deltaTime * Vector3.up * rotationSpeedY);
+                transform.Rotate(Time.deltaTime * Vector3.left * rotationSpeedX);
+                transform.Rotate(Time.deltaTime * Vector3.forward * rotationSpeedZ);
+            }
+        }
     }
 }

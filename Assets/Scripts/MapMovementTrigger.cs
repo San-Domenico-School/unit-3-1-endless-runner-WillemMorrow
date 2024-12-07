@@ -49,7 +49,5 @@ public class MapMovementTrigger : MonoBehaviour
     {
         triggered = false;
         moveable.transform.localPosition = objectInitialPosition;
-        //SOMETHING HERE MAYBE?????? LOCAL W/ PARENT VS. GLOBAL POSITIONS?
-        //parent is moving, but so is this. switch to only modifying movement along Y axis.
     }
 }
