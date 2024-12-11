@@ -15,27 +15,35 @@ using UnityEngine.SceneManagement;
  * 12.05.2024
  * Version1
  ************************/
-
-// SET SCOREADDED TO INCREASE AS time DECREASES/INCREASES, DEPENDING ON MODE.
-// x1.5 maybe???????
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;                                         // reference to the GameManager Instance.
 
-    [SerializeField] private TextMeshProUGUI scoreboardText, timeRemainingText; // scoreboard and time remaining text TMPs.
-    [SerializeField] private TextMeshProUGUI gameOverText;                      // reference to the game over TMP.
-    [SerializeField] private TextMesh GmOvrPnlScoreTxt, GmOvrPnlTimeTxt;        // references to the text on the gameEnd Panel.
+    [Header("TextMeshes")]
+    [SerializeField] private TextMesh GmOvrPnlScoreTxt;
+    [SerializeField] private TextMesh GmOvrPnlTimeTxt;                          // references to the text on the gameEnd Panel.
+    [SerializeField] private TextMesh physicalScoreTxt, chronometerTxt;         // reference to the score text on the scoreometer panel.
+    [Header ("Score?????")]
     [SerializeField] private float scoreAdded;                                  // how much score is added uppon the player getting a Scoreable
-    [SerializeField] private GameObject ToggleObjectGroup, enableManager;       // several obvious gameObjects. 
-    [SerializeField] private ParticleSystem smokeParticles, dirtParticles;      // smoke and dirt particles
-    [SerializeField] private AudioClip scoreSFX, backgroundMusic;               // reference to the SFX for gaining score.
-    [SerializeField] private ObjectRotator startButtonsRotator, endGameRotator; // references to the ObjectRotator component of the starting buttons and end game panel.
+    [Header("GameObjects")]
+    [SerializeField] private GameObject ToggleObjectGroup;                      // several obvious gameObjects. 
+    [SerializeField] private GameObject enableManager;
+    [Header("ParticleSystems")]
+    [SerializeField] private ParticleSystem smokeParticles;                     // smoke and dirt particles
+    [SerializeField] private ParticleSystem dirtParticles;
+    [Header("AudioClips")]
+    [SerializeField] private AudioClip scoreSFX;                                // reference to the SFX for gaining score.
+    [SerializeField] private AudioClip backgroundMusic;
+    [Header("ObjectRotators")]
+    [SerializeField] private ObjectRotator startButtonsRotator;                 // references to the ObjectRotator component of the starting buttons and end game panel.
+    [SerializeField] private ObjectRotator endGameRotator;
+    [SerializeField] private ObjectRotator scoreometerRotator;
     public static bool gameOver;                                                // game end bool activated if the player dies
-    private static int score;                                                 // the player's score
+    private static int score;                                                   // the player's score
     private AudioSource audioSource;                                            // reference to the source of the music audio.
-    public float time { get; private set; } = 60;                               // the time of the game. if the gamemode is 1 minute, it will count down from 60. if the gamemode is infinate, it will count up until the player dies.
-    public bool oneMinuteGame;                                                  // whether the gamemode is 1 minute or infinate.
+    public float time { get; private set; } = 60;                               // the time of the game. if the gamemode is 1 minute, it will count down from 60. if the gamemode is infinite, it will count up until the player dies.
+    public float gameTime { get; private set; }
+    public bool oneMinuteGame;                                                  // whether the gamemode is 1 minute or infinite.
     public bool gameEnd {  get; private set; }                                  // game end bool activated if the timer runs out.
     private Animator playerAnimator;                                            // reference to the player's animator.
 
@@ -68,10 +76,11 @@ public class GameManager : MonoBehaviour
     }
 
     // counts down the timer every second.
-    private void timeCountdown()
+    private void timeCountDown()
     {
         time--;
-        timeRemainingText.text = ("" + time);
+        chronometerTxt.text = ($"{time}");
+        gameTime++;
         if (time < 0)
         {
             EndGame();
@@ -79,10 +88,11 @@ public class GameManager : MonoBehaviour
     }
 
     // counts up on the timer every second.
-    private void timeCountup()
+    private void timeCountUp()
     {
         time++;
-        timeRemainingText.text = ("" + time);
+        chronometerTxt.text = ($"{time}");
+        gameTime++;
     }
 
     // method for starting the game; sets up the UI, music, and obstacle spawning.
@@ -94,15 +104,13 @@ public class GameManager : MonoBehaviour
         startButtonsRotator.enabled = true;
         if (oneMinuteGame == true)
         {
-            timeRemainingText.enabled = true;
-            InvokeRepeating("timeCountdown", 0.0f, 1.0f);
+            InvokeRepeating("timeCountDown", 0.0f, 1.0f);
         }
 
         else
         {
             time = 0;
-            timeRemainingText.enabled = true;
-            InvokeRepeating("timeCountup", 0.0f, 1.0f);
+            InvokeRepeating("timeCountUp", 0.0f, 1.0f);
         }
     }
 
@@ -116,9 +124,7 @@ public class GameManager : MonoBehaviour
         dirtParticles.Stop();
         CancelInvoke("timeCountdown");
         CancelInvoke("timeCountup");
-        //gameOverText.enabled = true;
-        scoreboardText.enabled = false;
-        timeRemainingText.enabled = false;
+        scoreometerRotator.enabled = true;
 
         StartCoroutine("GmOvrPanelRotator");
         
@@ -154,13 +160,19 @@ public class GameManager : MonoBehaviour
     // adds to the score when the player colides with a scorable object; called by the PlayerController.
     public void AddToScore()
     {
-        float scoreByTime = ((scoreAdded * (60 / time)) * 10);
+        float localTime = gameTime;
+        if (time < 1)
+        {
+            localTime = 1;
+        }
+
+        float scoreByTime = ((scoreAdded * (0.25f * gameTime)) * 10);
         
         score += (int)scoreByTime;
 
         audioSource.PlayOneShot(scoreSFX, 4.0f);
 
-        scoreboardText.text = ("Score: " + score);
+        physicalScoreTxt.text = ($"{score}");
     }
 
     private void RestartGame()

@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
         {
             jumpStatus = 0;
             //playerAudio.PlayOneShot(landSound, 0.1f);
-            if (GameManager.gameOver == false)
+            if ((GameManager.gameOver == false) && (GameManager.Instance.gameEnd == false))
             {
                 dirtParticle.Play();
             }
