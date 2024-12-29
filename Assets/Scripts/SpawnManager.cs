@@ -40,7 +40,7 @@ public class SpawnManager : MonoBehaviour
     //Enables a random prefabricated obstacle course from those available in the scene.
     public void EnablePrefab()
     {
-        if ((GameManager.Instance.time > 3) || (GameManager.Instance.oneMinuteGame == false))
+        if ((GameManager.time > 3) || (GameManager.Instance.infinateGame == false))
         {
             if ((obstacles.Length > 0) && (obstacles[0] != null))
             {

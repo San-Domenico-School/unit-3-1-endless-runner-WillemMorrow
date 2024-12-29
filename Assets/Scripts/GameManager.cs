@@ -37,14 +37,16 @@ public class GameManager : MonoBehaviour
     [Header("ObjectRotators")]
     [SerializeField] private ObjectRotator startButtonsRotator;                 // references to the ObjectRotator component of the starting buttons and end game panel.
     [SerializeField] private ObjectRotator endGameRotator;
-    [SerializeField] private ObjectRotator scoreometerRotator;
+    [SerializeField] private ObjectRotator scoreometerRotator;                  // reference to the rotator for the score and time UI panel.
+
     public static bool gameOver;                                                // game end bool activated if the player dies
     private static int score;                                                   // the player's score
     private AudioSource audioSource;                                            // reference to the source of the music audio.
-    public float time { get; private set; } = 60;                               // the time of the game. if the gamemode is 1 minute, it will count down from 60. if the gamemode is infinite, it will count up until the player dies.
+    public static float time { get; private set; } = 60;                        // the time of the game. if the gamemode is 1 minute, it will count down from 60. if the gamemode is infinite, it will count up until the player dies.
     public float gameTime { get; private set; }
-    public bool oneMinuteGame;                                                  // whether the gamemode is 1 minute or infinite.
+    public bool infinateGame;                                                  // whether the gamemode is 1 minute or infinite.
     public bool gameEnd {  get; private set; }                                  // game end bool activated if the timer runs out.
+    private bool keepTime;                                                      // whether the game resets the time upon loading the scene.
     private Animator playerAnimator;                                            // reference to the player's animator.
 
 
@@ -76,11 +78,13 @@ public class GameManager : MonoBehaviour
     }
 
     // counts down the timer every second.
-    private void timeCountDown()
+    private void TimeCountDown()
     {
         time--;
         chronometerTxt.text = ($"{time}");
         gameTime++;
+        //Debug.Log($"time == {time}");
+
         if (time < 0)
         {
             EndGame();
@@ -88,7 +92,7 @@ public class GameManager : MonoBehaviour
     }
 
     // counts up on the timer every second.
-    private void timeCountUp()
+    private void TimeCountUp()
     {
         time++;
         chronometerTxt.text = ($"{time}");
@@ -102,15 +106,26 @@ public class GameManager : MonoBehaviour
         enableManager.SetActive(true);
         //ToggleObjectGroup.SetActive(false);
         startButtonsRotator.enabled = true;
-        if (oneMinuteGame == true)
+        if (infinateGame == true)
         {
-            InvokeRepeating("timeCountDown", 0.0f, 1.0f);
+
+            InvokeRepeating("TimeCountDown", 0.0f, 1.0f);
+            if ((DataStorage.Instance.keepTimeStorage == true) && (DataStorage.Instance.timeStorage > 0))
+            {
+                time = DataStorage.Instance.timeStorage;
+
+            }
+
+            else
+            {
+                time = 60;
+            }
         }
 
         else
         {
             time = 0;
-            InvokeRepeating("timeCountUp", 0.0f, 1.0f);
+            InvokeRepeating("TimeCountUp", 0.0f, 1.0f);
         }
     }
 
@@ -122,8 +137,8 @@ public class GameManager : MonoBehaviour
 
         audioSource.Stop();
         dirtParticles.Stop();
-        CancelInvoke("timeCountdown");
-        CancelInvoke("timeCountup");
+        CancelInvoke("TimeCountDown");
+        CancelInvoke("TimeCountUp");
         scoreometerRotator.enabled = true;
 
         StartCoroutine("GmOvrPanelRotator");
@@ -150,9 +165,9 @@ public class GameManager : MonoBehaviour
     }
 
     // sets whether the game clock is counting down or up.
-    public void Settimed(bool timed)
+    public void SetTimed(bool timed)
     {
-        oneMinuteGame = timed;
+        infinateGame = timed;
 
         StartGame();
     }
@@ -183,8 +198,20 @@ public class GameManager : MonoBehaviour
         time = 60;
         MoveLeft.speed = 10;
         score = 0;
+        DataStorage.Instance.timeStorageSet(keepTime);
     }
 
+    private void TimeRespawn()
+    {
+        gameOver = false;
+        gameEnd = false;
+        MoveLeft.speed = 10;
+        score = 0;
+        keepTime = true;
+        DataStorage.Instance.timeStorageSet(keepTime);
+        SceneManager.LoadScene(0);
+    }
+    
     // manages the raycast when choosing the gamemode in the beginning of the game.
     public void OnM1()
     {
@@ -196,17 +223,25 @@ public class GameManager : MonoBehaviour
         {
             if (hit.collider.gameObject.name == "InfinateGame")
             {
-                Settimed(false);
+                SetTimed(false);
             }
 
             if (hit.collider.gameObject.name == "1MinuteGame")
             {
-                Settimed(true);
+                SetTimed(true);
             }
 
             if (hit.collider.gameObject.name == "RestartGame")
             {
                 RestartGame();
+            }
+
+            if (hit.collider.gameObject.name == "TimeRespawn")
+            {
+                if (infinateGame == true)
+                {
+                    TimeRespawn();
+                }
             }
         }
     }
